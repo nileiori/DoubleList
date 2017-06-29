@@ -10,8 +10,8 @@
 
 #include "stm32f10x.h"
 
-typedef struct DoubleNodeDef    DoubleNode, *DoubleNodeHandle_t;
-typedef struct DoubleListDef    DoubleList, *DoubleListHandle_t;
+typedef struct DoubleNodeDef    DoubleNode_t, *DoubleNodeHandle_t;
+typedef struct DoubleListDef    DoubleList_t, *DoubleListHandle_t;
 
 // 链表数据结构
 struct DoubleNodeDef
@@ -27,12 +27,19 @@ struct DoubleListDef
 };
 
 // 用于链表扩展的宏
-#define NODE_INITIALIZER    ((DoubleNode){ .pxPrev = NULL, .pxNext = NULL, })
-#define LIST_INITIALIZER    ((DoubleList){ .pxHead = NULL, .pxTail = NULL, })
-#define DECLARELISTNODE			DoubleNode __dbNode;
+#define NODE_INITIALIZER    ((DoubleNode_t){ .pxPrev = NULL, .pxNext = NULL, })
+#define LIST_INITIALIZER    ((DoubleList_t){ .pxHead = NULL, .pxTail = NULL, })
+#define DECLARELISTNODE			DoubleNode_t __dbNode;
 #define INIT_LISTNODE()			__dbNode = NODE_INITIALIZER
 
-//#define	DOUBLELIST_TEST
+#define	DOUBLELIST_TEST
+
+//申请一个双向链表
+DoubleListHandle_t	xDoubleListGenericCreate(void);
+#define vDynamicDoubleListCreate(pxDoubleList)											\
+{																																			\
+	( pxDoubleList ) = xDoubleListGenericCreate( );						\
+}
 
 #if defined	DOUBLELIST_TEST
 void vDoubleListSelfTest(void);

@@ -48,6 +48,16 @@ static DoubleNodeHandle_t xListGetNextNode(DoubleNodeHandle_t pxNode)
 {
 	return pxNode->pxNext;
 }
+//申请一个双向链表
+DoubleListHandle_t	xDoubleListGenericCreate(void)
+{
+	DoubleListHandle_t pxDoubleList = (DoubleListHandle_t)malloc(sizeof(DoubleList_t));	
+	if(pxDoubleList != NULL)
+	{
+		vListInit(pxDoubleList);
+	}
+	return pxDoubleList;
+}
 // 在链表头部插入一个节点
 static void vListPushToFront(DoubleListHandle_t pxList,DoubleNodeHandle_t pxNode) 
 {
@@ -231,7 +241,7 @@ static DoubleListHandle_t xListCombine(DoubleListHandle_t pxList1,DoubleListHand
   return pxList1;
 }
 
-#if 1//defined	DOUBLELIST_TEST
+#if defined	DOUBLELIST_TEST
 typedef struct MsgNodeDef 
 {
     DECLARELISTNODE		//双向节点信息
@@ -240,9 +250,9 @@ typedef struct MsgNodeDef
 typedef xMSGNODE		MsgNode_t;
 typedef MsgNode_t*	MsgNodeHandle_t;
 
-DoubleList    	lstMsgQueue;
-MsgNode_t				msg1,msg2;
-MsgNodeHandle_t pxMsgNodeTmp = NULL;
+DoubleListHandle_t	pxLstMsgQueue;
+MsgNode_t						msg1,msg2;
+MsgNodeHandle_t 		pxMsgNodeTmp = NULL;
 
 void vDoubleListSelfTest(void)
 {	
@@ -251,11 +261,12 @@ void vDoubleListSelfTest(void)
 	pxMsgNode->iMsg = 1;
 	msg1.iMsg = 2;
 	msg2.iMsg = 3;
-	vListPushToBack(&lstMsgQueue, (DoubleNodeHandle_t)pxMsgNode);
-	vListInsertBefore(&lstMsgQueue,(DoubleNodeHandle_t)pxMsgNode,(DoubleNodeHandle_t)&msg1);
-	vListInsertAfter(&lstMsgQueue,(DoubleNodeHandle_t)pxMsgNode,(DoubleNodeHandle_t)&msg2);
-	pxMsgNodeTmp = (MsgNodeHandle_t)xListPopFromBack(&lstMsgQueue);
-	pxMsgNodeTmp = (MsgNodeHandle_t)xListPopFromBack(&lstMsgQueue);
-	pxMsgNodeTmp = (MsgNodeHandle_t)xListPopFromBack(&lstMsgQueue);
+	vDynamicDoubleListCreate(pxLstMsgQueue);
+	vListPushToBack(pxLstMsgQueue, (DoubleNodeHandle_t)pxMsgNode);
+	vListInsertBefore(pxLstMsgQueue,(DoubleNodeHandle_t)pxMsgNode,(DoubleNodeHandle_t)&msg1);
+	vListInsertAfter(pxLstMsgQueue,(DoubleNodeHandle_t)pxMsgNode,(DoubleNodeHandle_t)&msg2);
+	pxMsgNodeTmp = (MsgNodeHandle_t)xListPopFromBack(pxLstMsgQueue);
+	pxMsgNodeTmp = (MsgNodeHandle_t)xListPopFromBack(pxLstMsgQueue);
+	pxMsgNodeTmp = (MsgNodeHandle_t)xListPopFromBack(pxLstMsgQueue);
 }
 #endif
